@@ -8,6 +8,7 @@ const cpOptions = require('./settings');
 const isGitHubTag = ref => ref && ref.includes('refs/tags/');
 
 const isBranch = ref => ref && ref.includes('refs/heads/');
+const timestamp = (useNumeric) => useNumeric ? new Date().getTime() : dateFormat(new Date(), 'yyyy-mm-dd.HHMMss');
 
 const createTags = () => {
   core.info('Creating Docker image tags...');
@@ -32,9 +33,7 @@ const createTags = () => {
     .replace(/^[^\w]+/, '')
     .substring(0, 120);
     const baseTag = `${safeBranchName}-${shortSha}`;
-
-    const timestamp = () => useNumericTimestamp ? new Date().getTime() : dateFormat(new Date(), 'yyyy-mm-dd.HHMMss');
-    const tag = addTimestamp ? `${baseTag}-${timestamp()}` : baseTag;
+    const tag = addTimestamp ? `${baseTag}-${timestamp(useNumericTimestamp)}` : baseTag;
     dockerTags.push(tag);
   } else {
     core.setFailed(
