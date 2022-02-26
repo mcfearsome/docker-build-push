@@ -33,8 +33,8 @@ const createTags = () => {
     .substring(0, 120);
     const baseTag = `${safeBranchName}-${shortSha}`;
 
-    const timestamp = useNumericTimestamp ? new Date().getTime() : dateFormat(new Date(), 'yyyy-mm-dd.HHMMss');
-    const tag = addTimestamp ? `${baseTag}-${timestamp}` : baseTag;
+    const timestamp = () => useNumericTimestamp ? new Date().getTime() : dateFormat(new Date(), 'yyyy-mm-dd.HHMMss');
+    const tag = addTimestamp ? `${baseTag}-${timestamp()}` : baseTag;
     dockerTags.push(tag);
   } else {
     core.setFailed(
