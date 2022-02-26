@@ -8,7 +8,7 @@ const cpOptions = require('./settings');
 const isGitHubTag = ref => ref && ref.includes('refs/tags/');
 
 const isBranch = ref => ref && ref.includes('refs/heads/');
-const timestamp = (useNumeric) => useNumeric ? new Date().getTime() : dateFormat(new Date(), 'yyyy-mm-dd.HHMMss');
+const timestamp = useNumeric => (useNumeric ? new Date().getTime() : dateFormat(new Date(), 'yyyy-mm-dd.HHMMss'));
 
 const createTags = () => {
   core.info('Creating Docker image tags...');
@@ -29,9 +29,9 @@ const createTags = () => {
     // refs/heads/jira-123/feature/something
     const branchName = ref.replace('refs/heads/', '');
     const safeBranchName = branchName
-    .replace(/[^\w.-]+/g, '-')
-    .replace(/^[^\w]+/, '')
-    .substring(0, 120);
+      .replace(/[^\w.-]+/g, '-')
+      .replace(/^[^\w]+/, '')
+      .substring(0, 120);
     const baseTag = `${safeBranchName}-${shortSha}`;
     const tag = addTimestamp ? `${baseTag}-${timestamp(useNumericTimestamp)}` : baseTag;
     dockerTags.push(tag);
