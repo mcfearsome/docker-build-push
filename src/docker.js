@@ -18,7 +18,6 @@ const createTags = () => {
   const addLatest = core.getInput('addLatest') === 'true';
   const addTimestamp = core.getInput('addTimestamp') === 'true';
   const useNumericTimestamp = core.getInput('numericTimestamp') === 'true';
-  const localTimestamp = useNumericTimestamp ? numericTimestamp() : timestamp();
   const ref = context.ref.toLowerCase();
   const shortSha = sha.substring(0, 7);
   const dockerTags = [];
@@ -32,10 +31,11 @@ const createTags = () => {
     // refs/heads/jira-123/feature/something
     const branchName = ref.replace('refs/heads/', '');
     const safeBranchName = branchName
-      .replace(/[^\w.-]+/g, '-')
-      .replace(/^[^\w]+/, '')
-      .substring(0, 120);
+    .replace(/[^\w.-]+/g, '-')
+    .replace(/^[^\w]+/, '')
+    .substring(0, 120);
     const baseTag = `${safeBranchName}-${shortSha}`;
+    const localTimestamp = useNumericTimestamp ? numericTimestamp() : timestamp();
     const tag = addTimestamp ? `${baseTag}-${localTimestamp}` : baseTag;
     dockerTags.push(tag);
   } else {
